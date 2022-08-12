@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpg">
+  <link rel="icon" href="/img/avatar.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="徐小云">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="docker 容器  一 docker安装 12345678910#1、yum源 更新到最新版本yum update#2、安装需要的软件包，yum-util提供yum-config-manager功能，另外两个是devicemapper驱动依赖的yum install -y yum-utils device-mapper-persistent-data 1vm2#3、设置yum源yum-conf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker的基本使用">
+<meta property="og:url" content="http://example.com/2022/06/29/docker/test/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="docker 容器  一 docker安装 12345678910#1、yum源 更新到最新版本yum update#2、安装需要的软件包，yum-util提供yum-config-manager功能，另外两个是devicemapper驱动依赖的yum install -y yum-utils device-mapper-persistent-data 1vm2#3、设置yum源yum-conf">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-29T02:08:14.000Z">
+<meta property="article:modified_time" content="2022-08-12T06:20:12.521Z">
+<meta property="article:author" content="徐小云">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>docker的基本使用 - 博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="docker的基本使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-29 10:08" pubdate>
+          2022年6月29日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">docker的基本使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="docker-容器"><a class="markdownIt-Anchor" href="#docker-容器"></a> docker 容器</h1>
+<h2 id="一-docker安装"><a class="markdownIt-Anchor" href="#一-docker安装"></a> 一 docker安装</h2>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#1、yum源 更新到最新版本</span><br>yum update<br><span class="hljs-comment">#2、安装需要的软件包，yum-util提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</span><br>yum install -y yum-utils device-mapper-persistent-data <span class="hljs-number">1</span>vm2<br><span class="hljs-comment">#3、设置yum源</span><br>yum-config-manager --add-repo http:<span class="hljs-regexp">//mi</span>rrors.aliyun.com<span class="hljs-regexp">/docker-ce/</span>linux<span class="hljs-regexp">/centos/</span>docker-ce.repo<br><span class="hljs-comment">#4、安装docker,出现输入的界面都按y</span><br>yum install -y docker-ce<br><span class="hljs-comment">#5、查看docker版本，验证是否验证成功</span><br>docker -v<br></code></pre></td></tr></table></figure>
+<h2 id="二-配置docker镜像"><a class="markdownIt-Anchor" href="#二-配置docker镜像"></a> 二 配置docker镜像</h2>
+<p>默认情况下docker会从 <a target="_blank" rel="noopener" href="https://hub.docker.com">docker hub</a> 拉取镜像 会特别慢<br />
+一般采用配置镜像加速器 （阿里云的镜像加速器）</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo mkdir -p <span class="hljs-regexp">/etc/</span>docker<br>sudo tee <span class="hljs-regexp">/etc/</span>docker/daemon.json &lt;&lt;-<span class="hljs-string">&#x27;EOF&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;registry-mirrors&quot;</span>: [<span class="hljs-string">&quot;https://9vpg9z3m.mirror.aliyuncs.com&quot;</span>]<br>&#125;<br>EOF<br>sudo systemctl daemon-reload<br>sudo systemctl restart docker<br></code></pre></td></tr></table></figure>
+<h2 id="三-docker服务相关命令"><a class="markdownIt-Anchor" href="#三-docker服务相关命令"></a> 三 docker服务相关命令</h2>
+<h3 id="31-启动docker服务"><a class="markdownIt-Anchor" href="#31-启动docker服务"></a> 3.1 启动docker服务</h3>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">systemctl <span class="hljs-literal">start</span>  docker<br></code></pre></td></tr></table></figure>
+<h3 id="32-查看docker服务状态"><a class="markdownIt-Anchor" href="#32-查看docker服务状态"></a> 3.2 查看docker服务状态</h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">systemctl status  docker</span><br></code></pre></td></tr></table></figure>
+<h3 id="33-停止docker服务"><a class="markdownIt-Anchor" href="#33-停止docker服务"></a> 3.3 停止docker服务</h3>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">systemctl stop  docker<br></code></pre></td></tr></table></figure>
+<h3 id="34-开机自动启动docker服务"><a class="markdownIt-Anchor" href="#34-开机自动启动docker服务"></a> 3.4 开机自动启动docker服务</h3>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">systemctl <span class="hljs-built_in">enable</span>  <br></code></pre></td></tr></table></figure>
+<h3 id="35-重启docker服务"><a class="markdownIt-Anchor" href="#35-重启docker服务"></a> 3.5 重启docker服务</h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">systemctl restart  docker</span><br></code></pre></td></tr></table></figure>
+<h2 id="四-镜像相关命令"><a class="markdownIt-Anchor" href="#四-镜像相关命令"></a> 四 镜像相关命令</h2>
+<h3 id="41-查看本地所有镜像"><a class="markdownIt-Anchor" href="#41-查看本地所有镜像"></a> 4.1 查看本地所有镜像</h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker images</span><br></code></pre></td></tr></table></figure>
+<h3 id="42-查看本地所有镜像的id"><a class="markdownIt-Anchor" href="#42-查看本地所有镜像的id"></a> 4.2 查看本地所有镜像的id</h3>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">docker images -<span class="hljs-selector-tag">q</span><br></code></pre></td></tr></table></figure>
+<h3 id="43-从网络中寻找镜像"><a class="markdownIt-Anchor" href="#43-从网络中寻找镜像"></a> 4.3 从网络中寻找镜像</h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker search reids</span><br></code></pre></td></tr></table></figure>
+<h3 id="44-拉取镜像"><a class="markdownIt-Anchor" href="#44-拉取镜像"></a> 4.4 拉取镜像</h3>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">docker</span> pull redis:版本号  版本号可以在docker hub上查找<br></code></pre></td></tr></table></figure>
+<h3 id="45-删除镜像"><a class="markdownIt-Anchor" href="#45-删除镜像"></a> 4.5 删除镜像</h3>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript">dcoker rmi 镜像<span class="hljs-built_in">id</span>  删除指定<span class="hljs-built_in">id</span>的镜像<br>docker rmi `docker images -q` 删除所有本地镜像<br></code></pre></td></tr></table></figure>
+<h2 id="五-容器命令"><a class="markdownIt-Anchor" href="#五-容器命令"></a> 五 容器命令</h2>
+<h3 id="51-创建容器"><a class="markdownIt-Anchor" href="#51-创建容器"></a> 5.1 创建容器</h3>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker run 参数<br>    -i 保持容器运行 <br>    -t 为容器分配一个伪终端<br>    -d 在后台运行<br>    -it 交互式容器  使用<span class="hljs-keyword">exit</span> 退出容器时会关闭容器 <br>    -id 守护式容器 使用docker exec 进入容器 并且退出不会关闭容器<br>    -- name 为创建的容器起一个名称<br></code></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">docker <span class="hljs-built_in">run</span> -it <span class="hljs-attribute">--name</span>=c1 tomcat /bin/bash<br></code></pre></td></tr></table></figure>
+<h3 id="52-进入容器-可以通过name-或者id-进入容器"><a class="markdownIt-Anchor" href="#52-进入容器-可以通过name-或者id-进入容器"></a> 5.2 进入容器 可以通过name 或者id 进入容器</h3>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker exec -it name <span class="hljs-regexp">/bin/</span>bash<br></code></pre></td></tr></table></figure>
+<h3 id="53-查看正在运行的容器"><a class="markdownIt-Anchor" href="#53-查看正在运行的容器"></a> 5.3 查看正在运行的容器</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker <span class="hljs-built_in">ps</span> <br>docker <span class="hljs-built_in">ps</span> <span class="hljs-literal">-a</span> 查看所有容器<br></code></pre></td></tr></table></figure>
+<h3 id="54-启动容器"><a class="markdownIt-Anchor" href="#54-启动容器"></a> 5.4 启动容器</h3>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">docker <span class="hljs-keyword">start</span> <span class="hljs-type">name</span><br></code></pre></td></tr></table></figure>
+<h3 id="55-关闭容器"><a class="markdownIt-Anchor" href="#55-关闭容器"></a> 5.5 关闭容器</h3>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fortran">docker <span class="hljs-keyword">stop</span> <span class="hljs-keyword">name</span><br></code></pre></td></tr></table></figure>
+<h3 id="55-删除容器"><a class="markdownIt-Anchor" href="#55-删除容器"></a> 5.5 删除容器</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker <span class="hljs-built_in">rm</span> name<br>docker <span class="hljs-built_in">rm</span> `docker <span class="hljs-built_in">ps</span> <span class="hljs-literal">-aq</span>` 删除所有容器 <br></code></pre></td></tr></table></figure>
+<h3 id="56-查看容器信息"><a class="markdownIt-Anchor" href="#56-查看容器信息"></a> 5.6 查看容器信息</h3>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs delphi">docker inspect <span class="hljs-keyword">name</span><br></code></pre></td></tr></table></figure>
+<h2 id="六-数据卷"><a class="markdownIt-Anchor" href="#六-数据卷"></a> 六 数据卷</h2>
+<h3 id="61-数据卷的概念"><a class="markdownIt-Anchor" href="#61-数据卷的概念"></a> 6.1 数据卷的概念</h3>
+<ul>
+<li>数据卷是宿主机中的一个目录或文件</li>
+<li>当容器目录和数据卷目录绑定后，对方的修改会立即同步</li>
+<li>一个数据卷可以被多个容器同时挂载</li>
+<li>一个容器也可以被挂载多个数据卷</li>
+</ul>
+<h3 id="62-配置数据卷"><a class="markdownIt-Anchor" href="#62-配置数据卷"></a> 6.2 配置数据卷</h3>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker run ... -v 宿主机目录:容器中目录<br>    <span class="hljs-number">1</span>.目录必须是绝对路径<br>    <span class="hljs-number">2</span>.如果目录不存在，会自动创建<br>    <span class="hljs-number">3</span>.可以挂载多个数据卷<br>    <br>docker run -id --name=c1 -v <span class="hljs-regexp">/root/</span>data:<span class="hljs-regexp">/root/</span>data_container  tomcat <span class="hljs-regexp">/bin/</span>bash <br></code></pre></td></tr></table></figure>
+<h2 id="七-应用部署"><a class="markdownIt-Anchor" href="#七-应用部署"></a> 七 应用部署</h2>
+<h3 id="71-部署mysql"><a class="markdownIt-Anchor" href="#71-部署mysql"></a> 7.1 部署mysql</h3>
+<p>1.拉取mysql镜像</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker pull mysql</span><br></code></pre></td></tr></table></figure>
+<p>2.创建容器 设置端口映射  和 目录映射</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/root/my</span>sql<br>docker run -id -p <span class="hljs-number">3306</span>:<span class="hljs-number">3306</span> --name mysql -v <span class="hljs-regexp">/root/my</span>sql<span class="hljs-regexp">/conf:/</span>etc<span class="hljs-regexp">/mysql/</span>conf.d -v <span class="hljs-regexp">/root/my</span>sql<span class="hljs-regexp">/logs:/</span>logs -v <span class="hljs-regexp">/root/my</span>sql<span class="hljs-regexp">/data:/</span>var<span class="hljs-regexp">/lib/my</span>sql -e MYSQL_ROOT_PASSWORD=<span class="hljs-number">123456</span> mysql<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>如果使用sqlyoung连接docker中的mysql需要修改加密规则</li>
+</ol>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-number">1.</span> 进入docker容器<br>docker exec -it mysql /bin/bash<br><span class="hljs-number">2.</span> 进入容器中的mysql<br>mysql -uroot -p123456<br><span class="hljs-number">3.</span> 修改加密规则<br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> identified <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;123456&#x27;</span>;<br>flush <span class="hljs-keyword">privileges</span>;<br><br></code></pre></td></tr></table></figure>
+<h3 id="72-部署tomcat"><a class="markdownIt-Anchor" href="#72-部署tomcat"></a> 7.2 部署tomcat</h3>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 1. 拉取镜像</span><br>docker pull tomcat<br><span class="hljs-comment">#2. 创建挂载目录</span><br>mkdir <span class="hljs-regexp">/root/</span>tomcat<br>docker run -id  --restart=always --name=tomcat -p <span class="hljs-number">8080</span>:<span class="hljs-number">8080</span> -v <span class="hljs-regexp">/root/</span>tomcat:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/tomcat/</span>webapps tomcat<br></code></pre></td></tr></table></figure>
+<h3 id="73-部署"><a class="markdownIt-Anchor" href="#73-部署"></a> 7.3 部署</h3>
+<h3 id="74-部署redis"><a class="markdownIt-Anchor" href="#74-部署redis"></a> 7.4 部署redis</h3>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 1.拉取redis镜像</span><br>docker pull redis<br><span class="hljs-comment"># 2.创建容器 设置端口映射</span><br>docker <span class="hljs-built_in">run</span> <span class="hljs-attribute">--restart</span>=always  -id <span class="hljs-attribute">--name</span>=redis -p 6379:6379 redis  --requirepass <span class="hljs-string">&quot;password&quot;</span><br></code></pre></td></tr></table></figure>
+<p><em>在创建redis的时候一定要注意设置密码,防止端口被黑客注入</em></p>
+<h3 id="75-部署rabbitmq"><a class="markdownIt-Anchor" href="#75-部署rabbitmq"></a> 7.5  部署rabbitmq</h3>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 1. 拉取镜像  版本为: management 带有web控制台</span><br>docker pull rabbitmq:management<br><br><span class="hljs-comment">#2. 创建容器</span><br>docker <span class="hljs-built_in">run</span> -id  <span class="hljs-attribute">--restart</span>=always --name rabbitmq  -p 5672:5672 -p 15672:15672 -v /root/rabbitmq:/var/lib/rabbitmq  rabbitmq:management<br><br>5672：应用访问端口；15672：控制台Web端口号<br><br><span class="hljs-comment"># 可以指定登录的用户名和密码</span><br>docker <span class="hljs-built_in">run</span> -id -p 15672:15672  -p  5672:5672  -e <span class="hljs-attribute">RABBITMQ_DEFAULT_USER</span>=admin -e <span class="hljs-attribute">RABBITMQ_DEFAULT_PASS</span>=123456 --name rabbitmq <span class="hljs-attribute">--hostname</span>=rabbitmqhostone  rabbitmq <br></code></pre></td></tr></table></figure>
+<h3 id="76-部署nginx"><a class="markdownIt-Anchor" href="#76-部署nginx"></a> 7.6 部署nginx</h3>
+<ul>
+<li>
+<p><strong>拉取nginx镜像</strong></p>
+  <figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs docker">docker pull nginx<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>创建nginx容器</strong></p>
+<figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs docker">docker <span class="hljs-keyword">run</span><span class="language-bash">  --restart=always --name nginx -p 80:80 -d nginx</span><br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>从nginx容器中映射核心文件</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>1.创建挂载目录</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir -p /root/nginx/&#123;conf,log,html&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>2.拷贝nginx容器对应的文件默认配置</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker cp nginx:/etc/nginx/nginx.conf /root/nginx/conf/nginx.conf<br>docker cp nginx:/etc/nginx/conf.d /root/nginx/conf/conf.d<br>docker cp nginx:/usr/share/nginx/html /root/nginx/<br></code></pre></td></tr></table></figure>
+<blockquote>
+<ol start="3">
+<li>停止并删除nginx容器</li>
+</ol>
+</blockquote>
+ <figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs docker">docker stop nginx <br>docker rm nginx<br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong>重新启动nginx镜像重新新容器</strong></li>
+</ul>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d --name nginx -p 80:80 \<br>-v /root/nginx/conf/nginx.conf:/etc/nginx/nginx.conf \<br>-v /root/nginx/conf/conf.d:/etc/nginx/conf.d \<br>-v /root/nginx/log:/var/log/nginx \<br>-v /root/nginx/html:/usr/share/nginx/html \<br>--privileged=true nginx<br><br></code></pre></td></tr></table></figure>
+<h2 id="77-部署nacos"><a class="markdownIt-Anchor" href="#77-部署nacos"></a> 7.7 部署nacos</h2>
+<ul>
+<li>拉取镜像</li>
+</ul>
+<blockquote>
+<p>docker pull nacos/nacos-server</p>
+</blockquote>
+<ul>
+<li>创建容器</li>
+</ul>
+<blockquote>
+<p>docker run -d -e prefer_host_mode=127.0.0.1 -e MODE=standalone -v /nacos/logs:/opt/software/nacos/logs -p 8848:8848 --name nacos --restart=always nacos/nacos-server</p>
+</blockquote>
+<h2 id="八-dockerfile"><a class="markdownIt-Anchor" href="#八-dockerfile"></a> 八 dockerfile</h2>
+<h3 id="81-将容器转为镜像"><a class="markdownIt-Anchor" href="#81-将容器转为镜像"></a> 8.1 将容器转为镜像</h3>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gauss">docker commit 容器id 镜像名称:版本号   <span class="hljs-meta"># 将容器转成镜像 在转为镜像的时候是不会将挂在目录下的文件转为镜像的</span><br><br>docker <span class="hljs-keyword">save</span> -o 压缩文件名称 镜像名称:版本号 <span class="hljs-meta"># 将镜像变成压缩文件</span><br><br>docker <span class="hljs-keyword">load</span> -i 压缩文件名称  <span class="hljs-meta"># 将压缩文件在转为镜像</span><br><br></code></pre></td></tr></table></figure>
+<h3 id="82-dockerfile"><a class="markdownIt-Anchor" href="#82-dockerfile"></a> 8.2 dockerfile</h3>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">使用dockerfile 自定义镜像 启动springboot项目<br><span class="hljs-number">1</span>.创建一个文件  vim springboot_dockerfile 输入下面内容<br><br><span class="hljs-keyword">FROM</span> java:<span class="hljs-number">8</span><br><span class="hljs-keyword">MAINTAINER</span> xyh&lt;<span class="hljs-number">2773604834</span>@qq.com&gt;<br><span class="hljs-keyword">ADD</span><span class="language-bash"> spring-boot-hello-0.0.1-SNAPSHOT.jar app.jar</span><br><span class="hljs-keyword">CMD</span><span class="language-bash"> java -jar app.jar    </span><br>    <br><span class="hljs-number">2</span>. 将dockerfile 文件编译成一个镜像文件<br>docker build -f ./springboot_dockerfile  -t app .<br><br><span class="hljs-number">3</span>. 使用编译好的镜像文件 创建容器<br>docker <span class="hljs-keyword">run</span><span class="language-bash"> -<span class="hljs-built_in">id</span> -p 9000:9000  app</span><br>    <br></code></pre></td></tr></table></figure>
+<h2 id="九-docker-compose"><a class="markdownIt-Anchor" href="#九-docker-compose"></a> 九 docker compose</h2>
+<h3 id="91-docker-compose-服务编排"><a class="markdownIt-Anchor" href="#91-docker-compose-服务编排"></a> 9.1 docker compose 服务编排</h3>
+<p>Docker Compose是一个编排多容器分布式部署的工具，提供命令集管理容器化应用的完整开发周期，包括服务构建,启动和停止。</p>
+<ul>
+<li>利用Dockerfile定义运行环境镜像</li>
+<li>使用docker-compose,ym定义组成应用的各服务</li>
+<li>运行docker-compose up启动应用</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/docker/" class="category-chain-item">docker</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/docker/">#docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>docker的基本使用</div>
+      <div>http://example.com/2022/06/29/docker/test/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>徐小云</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月29日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/30/hexo/%E4%BF%AE%E6%94%B9fluid%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84markdown%E6%B8%B2%E6%9F%93/" title="修改fluid主题中的markdown渲染">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">修改fluid主题中的markdown渲染</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/29/hexo/%E4%BD%BF%E7%94%A8GitHub%20Actions%20%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2hexo/" title="使用GitHub Actions 自动部署hexo">
+                        <span class="hidden-mobile">使用GitHub Actions 自动部署hexo</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo搭建</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <p>越努力,越幸运<p> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
